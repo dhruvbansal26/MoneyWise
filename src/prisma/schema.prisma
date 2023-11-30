@@ -45,6 +45,26 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  tables        TransactionTable[]
+}
+
+model TransactionTable {
+  id        String      @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  month     String
+  year      Int  
+  transactions Transaction[]
+
+  @@unique([userId, month, year])
+}
+
+model Transaction {
+  id          Int       @id @default(autoincrement())
+  table       TransactionTable @relation(fields: [tableId], references: [id])
+  tableId     String
+  amount      Float
+  description String  
 }
 
 model VerificationToken {

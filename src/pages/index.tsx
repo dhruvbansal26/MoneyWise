@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { GetServerSidePropsContext } from "next";
 
 export default function Home() {
-  <>hello</>;
+  return <div>Hello</div>;
 }
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
