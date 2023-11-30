@@ -21,34 +21,67 @@ export default function Table() {
   }, []);
 
   return (
-    <table className="table-auto border-collapse">
-      <thead>
-        <tr>
-          <th className="border py-2 px-4">
-            {currentMonth} {currentYear}
-          </th>
-        </tr>
-        <tr>
-          <th className="border px-4 py-2">Title</th>
-          <th className="border px-4 py-2">Description</th>
-          <th className="border px-4 py-2">Date</th>
-          <th className="border px-4 py-2">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td className="border px-4 py-2">Paycheck</td>
-          <td className="border px-4 py-2">Bi-weekly pay</td>
-          <td className="border px-4 py-2">11/15/2023</td>
-          <td className="border px-4 py-2">$2,000</td>
-        </tr>
-        <tr>
-          <td className="border px-4 py-2">Rent</td>
-          <td className="border px-4 py-2">Monthly rent payment</td>
-          <td className="border px-4 py-2">11/5/2023</td>
-          <td className="border px-4 py-2">$1,200</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="p-20">
+      <div className="flex flex-col">
+        <div className="-m-1.5 overflow-x-auto">
+          <div className="p-1.5 min-w-full inline-block align-middle">
+            <div className="border rounded-lg shadow overflow-hidden dark:border-gray-700 dark:shadow-gray-900">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50 dark:bg-gray-800">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-white"
+                    >
+                      TITLE
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-white"
+                    >
+                      DESCRIPTION
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-white"
+                    >
+                      AMOUNT
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-white"
+                    >
+                      ACTION
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  <tr>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black-800 dark:text-black-200">
+                      John Brown
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black-800 dark:text-black-200">
+                      New York No. 1 Lake Park
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black-800 dark:text-black-200">
+                      45
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

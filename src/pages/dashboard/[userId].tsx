@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
-import Table from "./components/Table";
+import Table from "../components/Table";
 import { TableInterface } from "@/pages/interfaces";
-import { NEXT_URL } from "./config";
+import { NEXT_URL } from "../config";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { userState } from "../store/atoms/userState";
 
 export default function Dashboard() {
   const [tables, setTables] = useState([]);
@@ -65,20 +67,4 @@ export default function Dashboard() {
       {tables.length > 0 && tables.map((table, index) => <Table key={index} />)}
     </>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  if (!session) {
-    return {
-      props: {},
-    };
-  }
-
-  return {
-    props: {
-      session,
-    },
-  };
 }

@@ -64,6 +64,7 @@ model Transaction {
   table       TransactionTable @relation(fields: [tableId], references: [id])
   tableId     String
   amount      Float
+  title       String
   description String  
 }
 
