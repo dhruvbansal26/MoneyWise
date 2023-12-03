@@ -1,5 +1,5 @@
 export interface TableInterface {
-  id: number;
+  id: string;
   userId: string;
   month: number;
   year: number;
@@ -8,7 +8,8 @@ export interface TableInterface {
 
 export interface TransactionInterface {
   id: number;
-  tableId: number;
+  tableId: string;
   amount: number;
+  title: string;
   description: string;
 }

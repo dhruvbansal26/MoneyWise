@@ -1,19 +1,9 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import { NextApiHandler } from "next";
-import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import { Provider } from "next-auth/providers/index";
 import { prisma } from "@/lib/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { getToken } from "next-auth/jwt";
-const secret = process.env.NEXTAUTH_SECRET;
-// const authHandler: NextApiHandler = (req, res) =>
-//   NextAuth(req, res, authOptions);
-// export default authHandler;
-interface User {
-  id: string;
-}
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers

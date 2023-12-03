@@ -2,14 +2,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
-
+import { TransactionInterface } from "@/pages/interfaces";
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
     const session = await getServerSession(req, res, authOptions);
-    const { month, year } = req.body;
+    const { month, year, transactions } = req.body;
 
     if (!session) {
       // Not Signed in
@@ -30,7 +30,7 @@ export default async function handle(
       return res.status(404).json({ error: "User not found" });
     }
 
-    const userId = user.id;
+    const userId = user?.id;
 
     // Check if a table already exists for the given month and year for the user
     const existingTable = await prisma.transactionTable.findFirst({
@@ -41,18 +41,20 @@ export default async function handle(
       },
     });
 
-    if (existingTable) {
+    if (existingTable?.month == month && existingTable?.year == year) {
       // A table already exists for the given month and year
       console.log("existing table!!!!");
-      return res.status(401).json({ error: "error creating new table" });
+      return res.status(201).json({ table: existingTable });
     }
-
     // Create a new transaction table
     const newTable = await prisma.transactionTable.create({
       data: {
         month: month,
         year: year,
         userId: userId,
+        transactions: {
+          create: [],
+        },
       },
     });
 

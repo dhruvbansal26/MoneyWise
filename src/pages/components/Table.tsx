@@ -1,87 +1,100 @@
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { getServerSession } from "next-auth";
-import { useRouter } from "next/router";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { GetServerSidePropsContext } from "next";
 import axios from "axios";
-import { TableInterface } from "@/pages/interfaces";
 
-export default function Table() {
-  const [currentMonth, setCurrentMonth] = useState<string>("");
-  const [currentYear, setCurrentYear] = useState<number>(0);
+import { TableInterface, TransactionInterface } from "@/pages/interfaces";
+
+interface Props {
+  table: TableInterface;
+}
+
+export default function Table({ table }: Props) {
+  const [transactions, setTransactions] = useState<TransactionInterface[]>([]);
 
   useEffect(() => {
-    const currentDate = new Date();
-    currentDate.setMonth(currentDate.getMonth());
-    const month = currentDate.toLocaleString("en-EN", { month: "long" });
-    setCurrentMonth(month);
-    const year = currentDate.getFullYear();
-    setCurrentYear(year);
-  }, []);
+    setTransactions(table.transactions);
+  }, [table.transactions]);
+
+  async function addTransaction() {
+    // Logic to add transaction
+    const tableId = table.id;
+
+    const response = await axios.post("/api/transactions", {
+      tableId,
+    });
+
+    setTransactions((prevTransactions) => [
+      ...prevTransactions,
+      response.data.transaction, // Assuming the response contains a single transaction
+    ]);
+  }
+
+  async function deleteTransaction(id: Number) {
+    try {
+      await axios.delete(`/api/transactions/${id}`);
+
+      setTransactions((prev) => prev.filter((t) => t.id !== id));
+
+      console.log("Transaction deleted!");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
-    <div className="p-20">
-      <div className="flex flex-col">
-        <div className="-m-1.5 overflow-x-auto">
-          <div className="p-1.5 min-w-full inline-block align-middle">
-            <div className="border rounded-lg shadow overflow-hidden dark:border-gray-700 dark:shadow-gray-900">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50 dark:bg-gray-800">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-white"
-                    >
-                      TITLE
-                    </th>
+    <div className="bg-gray-100 p-8">
+      <div className="mb-4 text-lg font-medium">
+        {table.month} {table.year}
+      </div>
 
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-white"
+      <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+        <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+          <table className="min-w-full leading-normal">
+            <thead>
+              <tr>
+                <th className="px-5 py-3 bg-gray-100 border-b-2 border-gray-200 text-gray-600 text-left text-xs font-semibold uppercase tracking-wider">
+                  Title
+                </th>
+                <th className="px-5 py-3 bg-gray-100 border-b-2 border-gray-200 text-gray-600 text-left text-xs font-semibold uppercase tracking-wider">
+                  Description
+                </th>
+                <th className="px-5 py-3 bg-gray-100 border-b-2 border-gray-200 text-gray-600 text-left text-xs font-semibold uppercase tracking-wider">
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((t) => (
+                <tr key={t.id}>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    {t.title}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    {t.description}
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    {t.amount}
+                  </td>
+                  <td>
+                    <button
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      onClick={() => deleteTransaction(t.id)}
                     >
-                      DESCRIPTION
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-white"
-                    >
-                      AMOUNT
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-white"
-                    >
-                      ACTION
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black-800 dark:text-black-200">
-                      John Brown
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black-800 dark:text-black-200">
-                      New York No. 1 Lake Park
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black-800 dark:text-black-200">
-                      45
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={addTransaction}
+      >
+        Add Transaction
+      </button>
     </div>
   );
 }
