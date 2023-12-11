@@ -1,19 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
-import Table from "../components/Table";
+import TableComponent from "./components/Table";
 import { TableInterface } from "@/pages/interfaces";
-import { BASE_URL, NEXT_URL } from "../config";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { userState } from "../store/atoms/userState";
 import prisma from "@/lib/prisma";
-import { init } from "next/dist/compiled/webpack/webpack";
-import { TransactionInterface } from "@/pages/interfaces";
-import { table } from "console";
+import { Button } from "@nextui-org/react";
+import { toast } from "react-toastify";
+import { useSetRecoilState } from "recoil";
 
 interface Props {
   initialTables: TableInterface[];
@@ -50,7 +47,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-export default function Dashboard({ initialTables }: Props) {
+export default function Tracker({ initialTables }: Props) {
   const { data: session, status } = useSession();
   const [tables, setTables] = useState<Array<TableInterface>>(initialTables);
   const router = useRouter();
@@ -66,14 +63,44 @@ export default function Dashboard({ initialTables }: Props) {
       });
 
       if (response.status === 200) {
+        toast.success("Table created!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
         const newTable = response.data.table;
         setTables([...tables, newTable]);
       }
       if (response.status === 201) {
+        toast.info("Table already exists!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
         const existingTable = response.data.table;
         console.log(existingTable);
       }
     } catch (error) {
+      toast.error("Error creating table!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       console.error("Error creating table:", error);
     }
   };
@@ -88,14 +115,11 @@ export default function Dashboard({ initialTables }: Props) {
 
   return (
     <>
-      <h1>Protected Page</h1>
-      <p>You can view this page because you are signed in.</p>
-      <button onClick={handleCreateTable}>Create Table</button>
-
+      <Button onClick={handleCreateTable}>Create Table</Button>
       {tables && tables.length === 0 && <p>No tables</p>}
       {tables &&
         tables.length > 0 &&
-        tables.map((table) => <Table key={table.id} table={table} />)}
+        tables.map((table) => <TableComponent key={table.id} table={table} />)}
     </>
   );
 }

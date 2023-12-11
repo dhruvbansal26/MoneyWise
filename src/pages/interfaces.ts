@@ -12,4 +12,7 @@ export interface TransactionInterface {
   amount: number;
   title: string;
   description: string;
+  split?: boolean;
+  splitcount?: number;
+  category: string;
 }

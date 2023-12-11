@@ -13,6 +13,6 @@ export default async function handle(
         id: Number(transactionId),
       },
     });
-    res.json({ transaction: transaction });
+    res.status(200).json({ transaction: transaction });
   }
 }
