@@ -1,10 +1,14 @@
-import { TransactionInterface } from "@/pages/interfaces";
 import { atom } from "recoil";
+import { TableInterface, TransactionInterface } from "@/pages/interfaces";
 
-export const tableState = atom({
+interface TableState {
+  id: string;
+  transactions: TransactionInterface[];
+}
+
+export const tableState = atom<TableState>({
   key: "tableState",
   default: {
     id: "",
-    transactions: [] as TransactionInterface[],
   },
 });

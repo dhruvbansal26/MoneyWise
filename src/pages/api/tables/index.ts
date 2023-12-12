@@ -8,7 +8,7 @@ export default async function handle(
 ) {
   try {
     const session = await getServerSession(req, res, authOptions);
-    const { month, year, transactions } = req.body;
+    const { month, year } = req.body;
 
     if (!session) {
       // Not Signed in
@@ -31,21 +31,6 @@ export default async function handle(
 
     const userId = user?.id;
 
-    // Check if a table already exists for the given month and year for the user
-    const existingTable = await prisma.transactionTable.findFirst({
-      where: {
-        userId,
-        month,
-        year,
-      },
-    });
-
-    if (existingTable?.month == month && existingTable?.year == year) {
-      // A table already exists for the given month and year
-      console.log("existing table!!!!");
-      return res.status(201).json({ table: existingTable });
-    }
-    // Create a new transaction table
     const newTable = await prisma.transactionTable.create({
       data: {
         month: month,

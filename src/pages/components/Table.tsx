@@ -25,22 +25,22 @@ import {
   DropdownTrigger,
   getKeyValue,
 } from "@nextui-org/react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import TransactionModal from "./TransactionModal";
+import { tableTransactionAtom } from "../store/atoms/tableTransactionAtom";
+import { tableFamily } from "../store/atoms/tableFamily";
 
 interface Props {
   table: TableInterface;
 }
 
 export default function TableComponent({ table }: Props) {
-  const setTableState = useSetRecoilState(tableState);
-  const tableId = useRecoilValue(tableState).id;
-  const tableTransactions = useRecoilValue(tableState).transactions;
+  const [tableState, setTableState] = useRecoilState(tableFamily(table.id));
+
   useEffect(() => {
     setTableState((prev) => ({
       ...prev,
       id: table.id,
-      transactions: table.transactions,
     }));
   }, [table.id, setTableState]);
 
@@ -103,12 +103,20 @@ export default function TableComponent({ table }: Props) {
             Actions
           </TableColumn>
         </TableHeader>
+
         <TableBody>
-          {tableTransactions.map((transaction) => (
+          {tableState.transactions.map((transaction) => (
             <TableRow key={transaction.id}>
               <TableCell>{transaction.title}</TableCell>
               <TableCell>{transaction.description}</TableCell>
-              <TableCell>{transaction.amount}</TableCell>
+              <TableCell>
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(transaction.amount)}
+              </TableCell>
               <TableCell>{transaction.category}</TableCell>
               <TableCell>
                 <Button onClick={() => deleteTransaction(transaction.id)}>
@@ -120,7 +128,7 @@ export default function TableComponent({ table }: Props) {
         </TableBody>
       </Table>
 
-      <TransactionModal />
+      <TransactionModal table={table} />
     </div>
   );
 }

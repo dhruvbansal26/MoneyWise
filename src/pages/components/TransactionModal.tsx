@@ -18,31 +18,24 @@ import {
 import axios from "axios";
 
 import { useState, useMemo } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { tableState } from "../store/atoms/tableState";
-
-interface IFormInput {
-  amount: number;
-  title: string;
-  description: string;
-  category: string;
-  split?: boolean;
-  splitcount?: number;
+import { tableFamily } from "../store/atoms/tableFamily";
+import { tableTransactionAtom } from "../store/atoms/tableTransactionAtom";
+import { TableInterface } from "../interfaces";
+interface Props {
+  table: TableInterface;
 }
-
-export default function TransactionModal() {
-  const setTableState = useSetRecoilState(tableState);
-  const tableId = useRecoilValue(tableState).id;
-  const tableTransactions = useRecoilValue(tableState).transactions;
+export default function TransactionModal({ table }: Props) {
+  const [tableState, setTableState] = useRecoilState(tableFamily(table.id));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [split, setSplit] = useState(false);
   const [splitcount, setSplitcount] = useState("");
-  const [category, setCategory] = useState(new Set(["text"]));
+  const [category, setCategory] = useState(new Set(["Category"]));
   const selectedValue = useMemo(
     () => Array.from(category).join(", ").replaceAll("_", " "),
     [category]
@@ -63,6 +56,7 @@ export default function TransactionModal() {
       return;
     }
     try {
+      const tableId = table.id;
       const response = await axios.post("/api/transactions", {
         tableId,
         title,
@@ -144,11 +138,15 @@ export default function TransactionModal() {
                     //@ts-ignore
                     onSelectionChange={setCategory}
                   >
-                    <DropdownItem key="text">Text</DropdownItem>
-                    <DropdownItem key="number">Number</DropdownItem>
-                    <DropdownItem key="date">Date</DropdownItem>
-                    <DropdownItem key="single_date">Single Date</DropdownItem>
-                    <DropdownItem key="iteration">Iteration</DropdownItem>
+                    <DropdownItem key="rent">Rent</DropdownItem>
+                    <DropdownItem key="home">Home</DropdownItem>
+                    <DropdownItem key="personal">Personal</DropdownItem>
+                    <DropdownItem key="travel">Travel</DropdownItem>
+                    <DropdownItem key="entertainment">
+                      Entertainment
+                    </DropdownItem>
+                    <DropdownItem key="groceries">Groceries</DropdownItem>
+                    <DropdownItem key="eatingout">Eating out</DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
                 <Checkbox

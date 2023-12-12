@@ -52,7 +52,7 @@ export default function Tracker({ initialTables }: Props) {
   const [tables, setTables] = useState<Array<TableInterface>>(initialTables);
   const router = useRouter();
 
-  const handleCreateTable = async () => {
+  async function createTable() {
     try {
       const currentDate = new Date();
       const month = currentDate.toLocaleString("en-EN", { month: "long" });
@@ -76,20 +76,6 @@ export default function Tracker({ initialTables }: Props) {
         const newTable = response.data.table;
         setTables([...tables, newTable]);
       }
-      if (response.status === 201) {
-        toast.info("Table already exists!", {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        const existingTable = response.data.table;
-        console.log(existingTable);
-      }
     } catch (error) {
       toast.error("Error creating table!", {
         position: "top-center",
@@ -103,8 +89,37 @@ export default function Tracker({ initialTables }: Props) {
       });
       console.error("Error creating table:", error);
     }
-  };
-
+  }
+  async function deleteTable(id: string) {
+    try {
+      const response = await axios.delete(`/api/tables/${id}`);
+      if (response.status === 200) {
+        toast.success("Table deleted!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+      setTables((prevTables) => prevTables.filter((table) => table.id !== id));
+    } catch (error) {
+      toast.error("Error deleting table!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      console.error("Error deleting table:", error);
+    }
+  }
   if (status === "loading") {
     return <p>Loading...</p>;
   }
@@ -115,11 +130,16 @@ export default function Tracker({ initialTables }: Props) {
 
   return (
     <>
-      <Button onClick={handleCreateTable}>Create Table</Button>
+      <Button onClick={createTable}>Create Table</Button>
       {tables && tables.length === 0 && <p>No tables</p>}
       {tables &&
         tables.length > 0 &&
-        tables.map((table) => <TableComponent key={table.id} table={table} />)}
+        tables.map((table) => (
+          <div key={table.id}>
+            <TableComponent key={table.id} table={table} />
+            <Button onClick={() => deleteTable(table.id)}>Delete Table</Button>
+          </div>
+        ))}
     </>
   );
 }

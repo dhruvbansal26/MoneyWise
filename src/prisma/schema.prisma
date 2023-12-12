@@ -55,8 +55,6 @@ model TransactionTable {
   month     String
   year      Int  
   transactions Transaction[] 
-
-  @@unique([userId, month, year])
 }
 
 model Transaction {
