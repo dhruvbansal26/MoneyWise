@@ -14,17 +14,32 @@ export default async function handle(
     splitcount,
   } = req.body;
 
-  const transaction = await prisma.transaction.create({
-    data: {
-      tableId: tableId,
-      amount: parseInt(amount),
-      title: title,
-      description: description,
-      split: split,
-      splitcount: parseInt(splitcount),
-      category: selectedValue,
-    },
-  });
+  if (split == true) {
+    const transaction = await prisma.transaction.create({
+      data: {
+        tableId: tableId,
+        amount: parseInt(amount) / splitcount,
+        title: title,
+        description: description,
+        split: split,
+        splitcount: parseInt(splitcount),
+        category: selectedValue,
+      },
+    });
+    res.status(200).json({ transaction: transaction });
+  } else {
+    const transaction = await prisma.transaction.create({
+      data: {
+        tableId: tableId,
+        amount: parseInt(amount),
+        title: title,
+        description: description,
+        split: split,
+        splitcount: parseInt(splitcount),
+        category: selectedValue,
+      },
+    });
 
-  res.status(200).json({ transaction: transaction });
+    res.status(200).json({ transaction: transaction });
+  }
 }
