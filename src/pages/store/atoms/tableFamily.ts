@@ -7,5 +7,5 @@ export const tableFamily = atomFamily({
   default: {
     id: "",
     transactions: [] as TransactionInterface[],
-  }, // Set your default value here
+  },
 });

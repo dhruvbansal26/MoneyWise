@@ -16,13 +16,11 @@ import {
   Input,
 } from "@nextui-org/react";
 import axios from "axios";
-
+import { useForm } from "react-hook-form";
 import { useState, useMemo } from "react";
 import { toast } from "react-toastify";
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { tableState } from "../store/atoms/tableState";
+import { useRecoilState } from "recoil";
 import { tableFamily } from "../store/atoms/tableFamily";
-import { tableTransactionAtom } from "../store/atoms/tableTransactionAtom";
 import { TableInterface } from "../interfaces";
 interface Props {
   table: TableInterface;
@@ -35,23 +33,23 @@ export default function TransactionModal({ table }: Props) {
   const [amount, setAmount] = useState("");
   const [split, setSplit] = useState(false);
   const [splitcount, setSplitcount] = useState("");
-  const [category, setCategory] = useState(new Set(["Category"]));
+  const [category, setCategory] = useState(new Set(["Other"]));
   const selectedValue = useMemo(
     () => Array.from(category).join(", ").replaceAll("_", " "),
     [category]
   );
 
   async function addTransaction() {
-    if (!title || !description || !amount) {
+    if (!title.trim() || !description.trim() || !amount.trim()) {
       toast.error("Please fill all fields!", {
         position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
+        autoClose: 1500,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
       });
       return;
     }
@@ -70,30 +68,35 @@ export default function TransactionModal({ table }: Props) {
       if (response.status === 200) {
         toast.success("Transaction logged!", {
           position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
+          autoClose: 1500,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "dark",
+          theme: "colored",
         });
-        setTableState((prev) => ({
-          ...prev,
-          transactions: [...prev.transactions, response.data.transaction],
-        }));
+        setTableState((prev) => {
+          const transactions = [...prev.transactions];
+          transactions.push(response.data.transaction);
+
+          return {
+            ...prev,
+            transactions,
+          };
+        });
         onOpenChange();
       }
     } catch (error) {
       toast.error("Error creating transaction!", {
         position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
+        autoClose: 1500,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
       });
       console.error("Error creating transaction:", error);
     }
@@ -146,7 +149,8 @@ export default function TransactionModal({ table }: Props) {
                       Entertainment
                     </DropdownItem>
                     <DropdownItem key="groceries">Groceries</DropdownItem>
-                    <DropdownItem key="eatingout">Eating out</DropdownItem>
+                    <DropdownItem key="Eating out">Eating Out</DropdownItem>
+                    <DropdownItem key="other">Other</DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
                 <Checkbox

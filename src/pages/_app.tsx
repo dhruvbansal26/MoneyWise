@@ -9,24 +9,24 @@ import { NextUIProvider } from "@nextui-org/react";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
-      <NextUIProvider>
-        <ToastContainer
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
-        <SessionProvider session={pageProps.session}>
+      <SessionProvider session={pageProps.session}>
+        <NextUIProvider>
+          <ToastContainer
+            position="top-center"
+            autoClose={1500}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
           <Appbar></Appbar>
           <Component {...pageProps} />
-        </SessionProvider>
-      </NextUIProvider>
+        </NextUIProvider>
+      </SessionProvider>
     </RecoilRoot>
   );
 }

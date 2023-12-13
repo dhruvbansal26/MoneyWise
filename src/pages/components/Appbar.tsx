@@ -1,6 +1,7 @@
 import { signIn, useSession, signOut } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
 import {
   Navbar,
   NavbarBrand,
@@ -9,15 +10,34 @@ import {
   Link,
   Button,
 } from "@nextui-org/react";
+import { GetServerSidePropsContext } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
 
-function Appbar() {
-  const session = useSession();
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) {
+    return {
+      props: {},
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
+
+export default function Appbar() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  if (!session.data) {
+  if (!session) {
     return (
       <Navbar className="bg-gray w-[relative] h-[84px] overflow-hidden text-left text-base text-white font-inter">
         <NavbarBrand>
@@ -65,7 +85,7 @@ function Appbar() {
           >
             <img
               className="h-8 w-8 rounded-full"
-              src={session.data?.user?.image || ""}
+              src={session?.user?.image || ""}
               alt=""
             />
           </button>
@@ -82,4 +102,3 @@ function Appbar() {
     );
   }
 }
-export default Appbar;

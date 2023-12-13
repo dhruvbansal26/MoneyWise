@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerSession } from "next-auth";
@@ -65,13 +65,13 @@ export default function Tracker({ initialTables }: Props) {
       if (response.status === 200) {
         toast.success("Table created!", {
           position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
+          autoClose: 1500,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "dark",
+          theme: "colored",
         });
         const newTable = response.data.table;
         setTables([...tables, newTable]);
@@ -79,13 +79,13 @@ export default function Tracker({ initialTables }: Props) {
     } catch (error) {
       toast.error("Error creating table!", {
         position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
+        autoClose: 1500,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
       });
       console.error("Error creating table:", error);
     }
@@ -96,30 +96,31 @@ export default function Tracker({ initialTables }: Props) {
       if (response.status === 200) {
         toast.success("Table deleted!", {
           position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
+          autoClose: 1500,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "dark",
+          theme: "colored",
         });
       }
       setTables((prevTables) => prevTables.filter((table) => table.id !== id));
     } catch (error) {
-      toast.error("Error deleting table!", {
+      toast.success("Error deleting table!", {
         position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
+        autoClose: 1500,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
       });
       console.error("Error deleting table:", error);
     }
   }
+
   if (status === "loading") {
     return <p>Loading...</p>;
   }
