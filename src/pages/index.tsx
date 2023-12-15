@@ -1,20 +1,12 @@
-import { authOptions } from "./api/auth/[...nextauth]";
-import { getServerSession } from "next-auth";
-import { GetServerSidePropsContext } from "next";
+import Image from "next/image";
 
 export default function Home() {
-  return <div>Hello</div>;
-}
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (!session) {
-    return {
-      props: {},
-    };
-  }
-  return {
-    props: {
-      session,
-    },
-  };
+  return (
+    <main className="flex flex-col items-center justify-between p-24">
+      <h1 className="text-5xl font-bold">MoneyWise</h1>
+      <p className="text-xl text-muted-foreground">
+        Latest way to track your expenses.
+      </p>
+    </main>
+  );
 }

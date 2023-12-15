@@ -77,7 +77,8 @@ export default function TransactionModal({ table }: Props) {
           theme: "colored",
         });
         setTableState((prev) => {
-          const transactions = [...prev.transactions];
+          const transactions = prev.transactions ? [...prev.transactions] : []; // Check if transactions is initially empty
+
           transactions.push(response.data.transaction);
 
           return {

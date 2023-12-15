@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getServerSession } from "next-auth";
@@ -7,11 +7,10 @@ import { GetServerSidePropsContext } from "next";
 import TableComponent from "./components/Table";
 import { TableInterface } from "@/pages/interfaces";
 import axios from "axios";
-import prisma from "@/lib/prisma";
-import { Button } from "@nextui-org/react";
+import prisma from "@/pages/lib/prisma";
+import { Button } from "./components/ui/button";
 import { toast } from "react-toastify";
-import { useSetRecoilState } from "recoil";
-
+import { useEffect } from "react";
 interface Props {
   initialTables: TableInterface[];
 }
@@ -39,6 +38,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       transactions: true,
     },
   });
+  console.log(tables);
   return {
     props: {
       session,
@@ -121,26 +121,35 @@ export default function Tracker({ initialTables }: Props) {
     }
   }
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-
-  if (status === "unauthenticated" || !session) {
-    router.push("/");
-  }
-
   return (
     <>
-      <Button onClick={createTable}>Create Table</Button>
-      {tables && tables.length === 0 && <p>No tables</p>}
-      {tables &&
-        tables.length > 0 &&
-        tables.map((table) => (
-          <div key={table.id}>
-            <TableComponent key={table.id} table={table} />
-            <Button onClick={() => deleteTable(table.id)}>Delete Table</Button>
-          </div>
-        ))}
+      <div className="flex flex-col items-center pt-14">
+        <h1 className="text-4xl font-bold">Tracker</h1>
+        <p className="text-xl text-muted-foreground">
+          Track your daily expenses!
+        </p>
+        <Button onClick={createTable} className="m-4">
+          Create Table
+        </Button>
+        {tables && tables.length === 0 && (
+          <>
+            <p className="mt-16 text-muted-foreground">No tables found.</p>
+          </>
+        )}
+
+        {tables &&
+          tables.length > 0 &&
+          tables.map((table) => (
+            <>
+              <div key={table.id}>
+                <TableComponent key={table.id} table={table} />
+                <Button onClick={() => deleteTable(table.id)}>
+                  Delete Table
+                </Button>
+              </div>
+            </>
+          ))}
+      </div>
     </>
   );
 }
