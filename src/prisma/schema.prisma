@@ -67,7 +67,6 @@ model Transaction {
   category    String
   split       Boolean?
   splitcount  Int?
-  createdAt   DateTime @default(now())
 }
 
 model VerificationToken {

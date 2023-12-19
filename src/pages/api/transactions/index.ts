@@ -4,15 +4,8 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {
-    tableId,
-    title,
-    amount,
-    description,
-    selectedValue,
-    split,
-    splitcount,
-  } = req.body;
+  const { tableId, title, amount, description, category, split, splitcount } =
+    req.body;
 
   if (split == true) {
     const transaction = await prisma.transaction.create({
@@ -23,7 +16,7 @@ export default async function handle(
         description: description,
         split: split,
         splitcount: parseInt(splitcount),
-        category: selectedValue,
+        category: category,
       },
     });
     res.status(200).json({ transaction: transaction });
@@ -36,7 +29,7 @@ export default async function handle(
         description: description,
         split: split,
         splitcount: parseInt(splitcount),
-        category: selectedValue,
+        category: category,
       },
     });
 

@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { columns } from "./columns";
 import { useRouter } from "next/router";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
-import TableComponent from "./components/Table";
 import { TableInterface } from "@/pages/interfaces";
 import axios from "axios";
 import prisma from "@/pages/lib/prisma";
 import { Button } from "./components/ui/button";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { DataTable } from "./components/DataTable";
+
 interface Props {
   initialTables: TableInterface[];
 }
@@ -48,9 +48,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function Tracker({ initialTables }: Props) {
-  const { data: session, status } = useSession();
   const [tables, setTables] = useState<Array<TableInterface>>(initialTables);
-  const router = useRouter();
 
   async function createTable() {
     try {
@@ -142,8 +140,16 @@ export default function Tracker({ initialTables }: Props) {
           tables.map((table) => (
             <>
               <div key={table.id}>
-                <TableComponent key={table.id} table={table} />
-                <Button onClick={() => deleteTable(table.id)}>
+                <DataTable
+                  key={table.id}
+                  columns={columns}
+                  data={table.transactions}
+                  inputTable={table}
+                />
+                <Button
+                  key={`button-${table.id}`}
+                  onClick={() => deleteTable(table.id)}
+                >
                   Delete Table
                 </Button>
               </div>
