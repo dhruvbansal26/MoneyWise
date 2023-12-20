@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { columns } from "./columns";
-import { useRouter } from "next/router";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
@@ -10,11 +9,6 @@ import prisma from "@/pages/lib/prisma";
 import { Button } from "./components/ui/button";
 import { toast } from "react-toastify";
 import { DataTable } from "./components/DataTable";
-
-interface Props {
-  initialTables: TableInterface[];
-}
-
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
 
@@ -46,9 +40,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+interface Props {
+  initialTables: TableInterface[];
+}
+
+import { useEffect } from "react";
+import { tableState } from "./store/atoms/tableState";
+
+import { tablesListState } from "./store/atoms/tablesListState";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
+import { useSession } from "next-auth/react";
 
 export default function Tracker({ initialTables }: Props) {
-  const [tables, setTables] = useState<Array<TableInterface>>(initialTables);
+  // const [tables, setTables] = useState<Array<TableInterface>>(initialTables);
+  // const setTables = useSetRecoilState(tables);
+  const setTables = useSetRecoilState(tablesListState("dev"));
+  const tables = useRecoilValue(tablesListState("dev"));
+
+  useEffect(() => {
+    setTables({
+      tables: initialTables,
+      length: initialTables.length,
+    });
+  }, []);
 
   async function createTable() {
     try {
@@ -72,7 +86,13 @@ export default function Tracker({ initialTables }: Props) {
           theme: "colored",
         });
         const newTable = response.data.table;
-        setTables([...tables, newTable]);
+        // setTables([...tables, newTable]);
+        setTables((prevTables) => {
+          return {
+            tables: [...prevTables.tables, newTable],
+            length: [...prevTables.tables, newTable].length,
+          };
+        });
       }
     } catch (error) {
       toast.error("Error creating table!", {
@@ -103,7 +123,21 @@ export default function Tracker({ initialTables }: Props) {
           theme: "colored",
         });
       }
-      setTables((prevTables) => prevTables.filter((table) => table.id !== id));
+      // setTables((prevTables) => prevTables.filter((table) => table.id !== id));
+      // setTables((prevTables) => {
+      //   return {
+      //     tables: prevTables.tables.filter((t) => t.id !== id),
+      //     length: prevTables.length - 1,
+      //   };
+      // });
+      setTables((prevTables) => {
+        const filtered = prevTables.tables.filter((t) => t.id !== id);
+
+        return {
+          tables: filtered,
+          length: filtered.length,
+        };
+      });
     } catch (error) {
       toast.success("Error deleting table!", {
         position: "top-center",
@@ -136,22 +170,22 @@ export default function Tracker({ initialTables }: Props) {
         )}
 
         {tables &&
-          tables.length > 0 &&
-          tables.map((table) => (
+          tables.tables.length > 0 &&
+          tables.tables.map((table) => (
             <>
-              <div key={table.id}>
+              <div key={`div-${table.id}`}>
                 <DataTable
                   key={table.id}
                   columns={columns}
                   data={table.transactions}
                   inputTable={table}
                 />
-                <Button
+                {/* <Button
                   key={`button-${table.id}`}
                   onClick={() => deleteTable(table.id)}
                 >
                   Delete Table
-                </Button>
+                </Button> */}
               </div>
             </>
           ))}

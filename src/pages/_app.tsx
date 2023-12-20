@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import { ToastContainer } from "react-toastify";
 import { SessionProvider } from "next-auth/react";
-import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider } from "@/pages/components/theme-provider";
 import Navbar from "./components/Navbar";
 import "react-toastify/dist/ReactToastify.css";

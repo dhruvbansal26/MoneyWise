@@ -13,14 +13,12 @@ import axios from "axios";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/pages/components/ui/dialog";
 import * as React from "react";
 import { Input } from "@/pages/components/ui/input";
 import { Button } from "./ui/button";
+import { TrashIcon } from "@heroicons/react/24/solid";
 import {
   Table,
   TableBody,
@@ -31,11 +29,12 @@ import {
 } from "@/pages/components/ui/table";
 import { TransactionForm } from "./TransactionForm";
 import { useEffect, useMemo } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { tableFamily } from "../store/atoms/tableFamily";
 import { TableInterface } from "../interfaces";
+import { tableState } from "../store/atoms/tableState";
 import { toast } from "react-toastify";
-
+import { tablesListState } from "../store/atoms/tablesListState";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -51,8 +50,60 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const atom = useMemo(() => tableFamily(inputTable.id), [inputTable.id]);
-  const [tableState, setTableState] = useRecoilState(atom);
+  // const atom = useMemo(() => tableFamily(inputTable.id), [inputTable.id]);
+  // const [tableState, setTableState] = useRecoilState(atom);
+  const inputTableId = inputTable.id;
+  const [_tableState, setTableState] = useRecoilState(
+    tableState(inputTable.id)
+  );
+  const setTables = useSetRecoilState(tablesListState("dev"));
+  const tables = useRecoilValue(tablesListState("dev"));
+
+  async function deleteTable(id: string) {
+    try {
+      const response = await axios.delete(`/api/tables/${id}`);
+      if (response.status === 200) {
+        toast.success("Table deleted!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+      // setTables((prevTables) => prevTables.filter((table) => table.id !== id));
+      // setTables((prevTables) => {
+      //   return {
+      //     tables: prevTables.tables.filter((t) => t.id !== id),
+      //     length: prevTables.length - 1,
+      //   };
+      // });
+      setTables((prevTables) => {
+        const filtered = prevTables.tables.filter((t) => t.id !== id);
+
+        return {
+          tables: filtered,
+          length: filtered.length,
+        };
+      });
+    } catch (error) {
+      toast.success("Error deleting table!", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      console.error("Error deleting table:", error);
+    }
+  }
+
   const [rowSelection, setRowSelection] = React.useState({});
 
   useEffect(() => {
@@ -62,37 +113,23 @@ export function DataTable<TData, TValue>({
     }));
   }, [inputTable.transactions]);
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onRowSelectionChange: setRowSelection,
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-      rowSelection,
-    },
-  });
-
-  async function deleteTransaction(id: Number) {
-    try {
-      const response = await axios.delete(`/api/transactions/${id}`);
-
-      if (response.status === 200) {
-        setTableState((prev) => ({
-          ...prev,
-          transactions: prev.transactions.filter((t) => t.id !== id),
-        }));
-      }
-    } catch (error) {
-      console.error("Error deleting transaction:", error);
-    }
-  }
+  const table =
+    useReactTable({
+      data,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      onSortingChange: setSorting,
+      getSortedRowModel: getSortedRowModel(),
+      onRowSelectionChange: setRowSelection,
+      onColumnFiltersChange: setColumnFilters,
+      getFilteredRowModel: getFilteredRowModel(),
+      state: {
+        sorting,
+        columnFilters,
+        rowSelection,
+      },
+    }) || {};
 
   return (
     <>
@@ -129,7 +166,9 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table &&
+            table.getRowModel() &&
+            table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -143,6 +182,15 @@ export function DataTable<TData, TValue>({
                       )}
                     </TableCell>
                   ))}
+                  {/* <TableCell>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      // onClick={() => deleteTransaction(row.id)} // Replace handleDeleteRow with your logic
+                    >
+                      Delete
+                    </Button>
+                  </TableCell> */}
                 </TableRow>
               ))
             ) : (
@@ -174,9 +222,14 @@ export function DataTable<TData, TValue>({
           >
             Next
           </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()}>
-            Delete Table
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => deleteTable(inputTableId)}
+          >
+            <TrashIcon className="h-4 w-4 text-black-500"></TrashIcon>
           </Button>
+
           <Dialog>
             <DialogTrigger>
               <Button>Add</Button>

@@ -54,8 +54,9 @@ CREATE TABLE "Transaction" (
     "amount" DOUBLE PRECISION NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "split" BOOLEAN NOT NULL,
-    "splitcount" INTEGER NOT NULL,
+    "category" TEXT NOT NULL,
+    "split" BOOLEAN,
+    "splitcount" INTEGER,
 
     CONSTRAINT "Transaction_pkey" PRIMARY KEY ("id")
 );
@@ -75,9 +76,6 @@ CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "TransactionTable_userId_month_year_key" ON "TransactionTable"("userId", "month", "year");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");

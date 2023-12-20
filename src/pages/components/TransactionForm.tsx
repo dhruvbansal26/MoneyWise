@@ -1,4 +1,3 @@
-"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -6,8 +5,6 @@ import { Button } from "@/pages/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/pages/components/ui/card";
@@ -57,6 +54,7 @@ const formSchema = z.object({
 interface Props {
   table: TableInterface;
 }
+import { tableState } from "../store/atoms/tableState";
 export function TransactionForm({ table }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,7 +68,7 @@ export function TransactionForm({ table }: Props) {
     },
   });
 
-  const [tableState, setTableState] = useRecoilState(tableFamily(table.id));
+  const [_tableState, setTableState] = useRecoilState(tableState(table.id));
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const parsedValues = formSchema.parse(values); // Use Zod's parse function
