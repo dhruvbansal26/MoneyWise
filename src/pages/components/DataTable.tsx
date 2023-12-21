@@ -9,16 +9,11 @@ import {
   getFilteredRowModel,
   ColumnFiltersState,
 } from "@tanstack/react-table";
-import axios from "axios";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@/pages/components/ui/dialog";
-import * as React from "react";
-import { Input } from "@/pages/components/ui/input";
-import { Button } from "./ui/button";
-import { TrashIcon } from "@heroicons/react/24/solid";
 import {
   Table,
   TableBody,
@@ -28,12 +23,16 @@ import {
   TableRow,
 } from "@/pages/components/ui/table";
 import { TransactionForm } from "./TransactionForm";
-import { useEffect, useMemo } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { tableFamily } from "../store/atoms/tableFamily";
+import { useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { TableInterface } from "../interfaces";
 import { tableState } from "../store/atoms/tableState";
 import { toast } from "react-toastify";
+import axios from "axios";
+import * as React from "react";
+import { Input } from "@/pages/components/ui/input";
+import { Button } from "./ui/button";
+import { TrashIcon } from "@heroicons/react/24/solid";
 import { tablesListState } from "../store/atoms/tablesListState";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,14 +49,34 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  // const atom = useMemo(() => tableFamily(inputTable.id), [inputTable.id]);
-  // const [tableState, setTableState] = useRecoilState(atom);
   const inputTableId = inputTable.id;
-  const [_tableState, setTableState] = useRecoilState(
-    tableState(inputTable.id)
-  );
-  const setTables = useSetRecoilState(tablesListState("dev"));
-  const tables = useRecoilValue(tablesListState("dev"));
+  const setTableState = useSetRecoilState(tableState(inputTable.id));
+  const setTablesList = useSetRecoilState(tablesListState("dev"));
+  const [rowSelection, setRowSelection] = React.useState({});
+  const table =
+    useReactTable({
+      data,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      onSortingChange: setSorting,
+      getSortedRowModel: getSortedRowModel(),
+      onRowSelectionChange: setRowSelection,
+      onColumnFiltersChange: setColumnFilters,
+      getFilteredRowModel: getFilteredRowModel(),
+      state: {
+        sorting,
+        columnFilters,
+        rowSelection,
+      },
+    }) || {};
+
+  useEffect(() => {
+    setTableState((prev) => ({
+      ...prev,
+      transactions: inputTable.transactions,
+    }));
+  }, [inputTable.transactions]);
 
   async function deleteTable(id: string) {
     try {
@@ -74,14 +93,7 @@ export function DataTable<TData, TValue>({
           theme: "colored",
         });
       }
-      // setTables((prevTables) => prevTables.filter((table) => table.id !== id));
-      // setTables((prevTables) => {
-      //   return {
-      //     tables: prevTables.tables.filter((t) => t.id !== id),
-      //     length: prevTables.length - 1,
-      //   };
-      // });
-      setTables((prevTables) => {
+      setTablesList((prevTables) => {
         const filtered = prevTables.tables.filter((t) => t.id !== id);
 
         return {
@@ -104,32 +116,30 @@ export function DataTable<TData, TValue>({
     }
   }
 
-  const [rowSelection, setRowSelection] = React.useState({});
+  async function deleteTransaction(id: Number) {
+    try {
+      const response = await axios.delete(`/api/transactions/${id}`);
 
-  useEffect(() => {
-    setTableState((prev) => ({
-      ...prev,
-      transactions: inputTable.transactions,
-    }));
-  }, [inputTable.transactions]);
-
-  const table =
-    useReactTable({
-      data,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      onSortingChange: setSorting,
-      getSortedRowModel: getSortedRowModel(),
-      onRowSelectionChange: setRowSelection,
-      onColumnFiltersChange: setColumnFilters,
-      getFilteredRowModel: getFilteredRowModel(),
-      state: {
-        sorting,
-        columnFilters,
-        rowSelection,
-      },
-    }) || {};
+      if (response.status === 200) {
+        toast.success("Transaction deleted!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        setTableState((prev) => ({
+          ...prev,
+          transactions: prev.transactions.filter((t) => t.id !== id),
+        }));
+      }
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+    }
+  }
 
   return (
     <>
@@ -166,9 +176,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table &&
-            table.getRowModel() &&
-            table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -182,15 +190,16 @@ export function DataTable<TData, TValue>({
                       )}
                     </TableCell>
                   ))}
-                  {/* <TableCell>
+                  <TableCell>
                     <Button
                       variant="outline"
                       size="sm"
-                      // onClick={() => deleteTransaction(row.id)} // Replace handleDeleteRow with your logic
+                      //@ts-ignore
+                      onClick={() => deleteTransaction(row.original.id)}
                     >
                       Delete
                     </Button>
-                  </TableCell> */}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
@@ -229,7 +238,6 @@ export function DataTable<TData, TValue>({
           >
             <TrashIcon className="h-4 w-4 text-black-500"></TrashIcon>
           </Button>
-
           <Dialog>
             <DialogTrigger>
               <Button>Add</Button>

@@ -8,9 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/pages/components/ui/dropdown-menu";
 import { Checkbox } from "@/pages/components/ui/checkbox";
-import { useRecoilValue } from "recoil";
-import { tableState } from "./store/atoms/tableState";
-import axios from "axios";
 export type Transaction = {
   id: number;
   tableId: string;
@@ -21,21 +18,6 @@ export type Transaction = {
   splitcount?: number;
   category: string;
 };
-
-async function deleteTransaction(id: Number) {
-  try {
-    const response = await axios.delete(`/api/transactions/${id}`);
-
-    // if (response.status === 200) {
-    //   setTableState((prev) => ({
-    //     ...prev,
-    //     transactions: prev.transactions.filter((t) => t.id !== id),
-    //   }));
-    // }
-  } catch (error) {
-    console.error("Error deleting transaction:", error);
-  }
-}
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -145,9 +127,6 @@ export const columns: ColumnDef<Transaction>[] = [
               }
             >
               Copy transaction ID
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => deleteTransaction(transaction.id)}>
-              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
