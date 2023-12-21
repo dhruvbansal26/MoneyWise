@@ -37,7 +37,7 @@ import { tablesListState } from "../store/atoms/tablesListState";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  inputTable: TableInterface; // New prop for table ID
+  inputTable: TableInterface;
 }
 
 export function DataTable<TData, TValue>({
@@ -49,6 +49,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
   const inputTableId = inputTable.id;
   const setTableState = useSetRecoilState(tableState(inputTable.id));
   const setTablesList = useSetRecoilState(tablesListState("dev"));

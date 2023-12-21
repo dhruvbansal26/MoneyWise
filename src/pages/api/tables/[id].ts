@@ -21,4 +21,13 @@ export default async function handle(
     });
     res.status(200).json({ table: table });
   }
+
+  if (req.method === "GET") {
+    const table = await prisma.transactionTable.findUnique({
+      where: {
+        id: tableId,
+      },
+    });
+    res.status(200).json({ table: table });
+  }
 }

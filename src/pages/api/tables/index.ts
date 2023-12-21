@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
+import { TransactionInterface } from "@/pages/interfaces";
 
 export default async function handle(
   req: NextApiRequest,
@@ -10,7 +11,7 @@ export default async function handle(
   try {
     const session = await getServerSession(req, res, authOptions);
     const { month, year } = req.body;
-
+    const transactions = [];
     if (!session) {
       // Not Signed in
       console.log("Not logged in");
@@ -37,13 +38,13 @@ export default async function handle(
         month: month,
         year: year,
         userId: userId,
-        transactions: {
-          create: [],
-        },
+      },
+      include: {
+        transactions: true,
       },
     });
 
-    console.log("new table!!!");
+    console.log("new table!!!", newTable);
     return res.status(200).json({ table: newTable });
   } catch (error) {
     console.error("Error:", error);

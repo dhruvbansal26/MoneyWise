@@ -2,7 +2,7 @@ import { columns } from "./columns";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
-import { TableInterface } from "@/pages/interfaces";
+import { TableInterface, TransactionInterface } from "@/pages/interfaces";
 import axios from "axios";
 import prisma from "@/pages/lib/prisma";
 import { Button } from "./components/ui/button";
@@ -80,6 +80,7 @@ export default function Tracker({ initialTables }: Props) {
           theme: "colored",
         });
         const newTable = response.data.table;
+        console.log(newTable);
         setTablesList((prevTables) => {
           return {
             tables: [...prevTables.tables, newTable],

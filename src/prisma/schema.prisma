@@ -54,7 +54,7 @@ model TransactionTable {
   userId    String
   month     String
   year      Int  
-  transactions Transaction[] 
+  transactions Transaction[]  
 }
 
 model Transaction {
