@@ -100,23 +100,36 @@ export function TransactionForm({ table }: Props) {
           progress: undefined,
           theme: "colored",
         });
+        let updatedTransactions: any;
+
         setTableState((prev) => {
-          const transactions = prev.transactions ? [...prev.transactions] : []; // Check if transactions is initially empty
+          // update transactions for this table
 
-          transactions.push(response.data.transaction);
+          updatedTransactions = [
+            ...prev.transactions,
+            response.data.transaction,
+          ];
 
-          form.reset({
-            amount: 0,
-            title: "",
-            description: "",
-            category: "",
-            split: false,
-            splitcount: 0,
+          return {
+            ...prev,
+            transactions: updatedTransactions,
+          };
+        });
+
+        setTablesList((prev) => {
+          // update tables list
+
+          const updatedTables = prev.tables.map((table) => {
+            if (table.id === tableId) {
+              return { ...table, transactions: updatedTransactions };
+            } else {
+              return table;
+            }
           });
 
           return {
             ...prev,
-            transactions,
+            tables: updatedTables,
           };
         });
       }

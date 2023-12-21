@@ -131,10 +131,26 @@ export function DataTable<TData, TValue>({
           progress: undefined,
           theme: "colored",
         });
-        setTableState((prev) => ({
-          ...prev,
-          transactions: prev.transactions.filter((t) => t.id !== id),
-        }));
+        let updatedTransactions: any;
+        setTableState((prev) => {
+          updatedTransactions = prev.transactions.filter((t) => t.id !== id);
+          return { ...prev, transactions: updatedTransactions };
+        });
+
+        setTablesList((prev) => {
+          const updatedTables = prev.tables.map((table) => {
+            if (table.id === inputTableId) {
+              return { ...table, transactions: updatedTransactions };
+            } else {
+              return table;
+            }
+          });
+
+          return {
+            ...prev,
+            tables: updatedTables,
+          };
+        });
       }
     } catch (error) {
       console.error("Error deleting transaction:", error);
