@@ -1,12 +1,8 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { Button } from "@/pages/components/ui/button";
-import { ModeToggle } from "@/pages/components/ui/toggle-mode";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/pages/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/toggle-mode";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signIn, useSession, signOut } from "next-auth/react";
 import {
   DropdownMenu,
@@ -15,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/pages/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const { data: session, status } = useSession();

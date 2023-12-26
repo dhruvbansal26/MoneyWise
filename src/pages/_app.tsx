@@ -3,8 +3,8 @@ import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import { ToastContainer } from "react-toastify";
 import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "@/pages/components/theme-provider";
-import Navbar from "./components/Navbar";
+import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "../components/Navbar";
 import "react-toastify/dist/ReactToastify.css";
 export default function App({ Component, pageProps }: AppProps) {
   return (

@@ -9,11 +9,7 @@ import {
   getFilteredRowModel,
   ColumnFiltersState,
 } from "@tanstack/react-table";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/pages/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -21,16 +17,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/pages/components/ui/table";
+} from "@/components/ui/table";
 import { TransactionForm } from "./TransactionForm";
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { TableInterface } from "../interfaces";
+import { TableInterface } from "../pages/interfaces";
 import { tableState } from "../store/atoms/tableState";
 import { toast } from "react-toastify";
 import axios from "axios";
 import * as React from "react";
-import { Input } from "@/pages/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { tablesListState } from "../store/atoms/tablesListState";

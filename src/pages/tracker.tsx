@@ -4,14 +4,14 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
 import { TableInterface, TransactionInterface } from "@/pages/interfaces";
 import axios from "axios";
-import prisma from "@/pages/lib/prisma";
-import { Button } from "./components/ui/button";
+import prisma from "@/lib/prisma";
+import { Button } from "../components/ui/button";
 import { toast } from "react-toastify";
-import { DataTable } from "./components/DataTable";
+import { DataTable } from "../components/DataTable";
 import { useEffect } from "react";
-import { tablesListState } from "./store/atoms/tablesListState";
+import { tablesListState } from "../store/atoms/tablesListState";
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { tableState } from "./store/atoms/tableState";
+import { tableState } from "../store/atoms/tableState";
 interface Props {
   initialTables: TableInterface[];
 }

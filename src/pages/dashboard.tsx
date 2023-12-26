@@ -3,7 +3,7 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
 import { TableInterface } from "./interfaces";
 import { Card, Title, DonutChart } from "@tremor/react";
-import prisma from "@/pages/lib/prisma";
+import prisma from "@/lib/prisma";
 interface Props {
   initialTables: TableInterface[];
 }

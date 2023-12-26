@@ -2,13 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { tablesListState } from "../store/atoms/tablesListState";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/pages/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/pages/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -17,21 +12,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/pages/components/ui/form";
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/pages/components/ui/select";
+} from "@/components/ui/select";
 import { tableState } from "../store/atoms/tableState";
 import { toast } from "react-toastify";
 import { useSetRecoilState } from "recoil";
 import { Checkbox } from "./ui/checkbox";
-import { Input } from "@/pages/components/ui/input";
+import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { TableInterface } from "../interfaces";
+import { TableInterface } from "../pages/interfaces";
 const formSchema = z.object({
   amount: z.number().max(100000, {
     message: "Smaller amount expected.",

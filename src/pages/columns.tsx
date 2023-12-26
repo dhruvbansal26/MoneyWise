@@ -1,13 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/pages/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/pages/components/ui/dropdown-menu";
-import { Checkbox } from "@/pages/components/ui/checkbox";
+} from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
 export type Transaction = {
   id: number;
   tableId: string;
