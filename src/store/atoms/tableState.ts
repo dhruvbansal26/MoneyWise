@@ -1,4 +1,4 @@
-import { TransactionInterface } from "@/pages/interfaces";
+import { TransactionInterface } from "@/interfaces";
 import { atomFamily } from "recoil";
 
 export const tableState = atomFamily({

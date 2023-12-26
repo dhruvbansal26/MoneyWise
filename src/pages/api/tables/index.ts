@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
-import { TransactionInterface } from "@/pages/interfaces";
+import { TransactionInterface } from "@/interfaces";
 
 export default async function handle(
   req: NextApiRequest,

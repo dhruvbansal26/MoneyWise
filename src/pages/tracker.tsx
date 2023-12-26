@@ -1,8 +1,8 @@
-import { columns } from "./columns";
+import { columns } from "../columns";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
-import { TableInterface, TransactionInterface } from "@/pages/interfaces";
+import { TableInterface, TransactionInterface } from "@/interfaces";
 import axios from "axios";
 import prisma from "@/lib/prisma";
 import { Button } from "../components/ui/button";

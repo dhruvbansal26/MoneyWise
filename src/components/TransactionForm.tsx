@@ -26,7 +26,7 @@ import { useSetRecoilState } from "recoil";
 import { Checkbox } from "./ui/checkbox";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { TableInterface } from "../pages/interfaces";
+import { TableInterface } from "../interfaces";
 const formSchema = z.object({
   amount: z.number().max(100000, {
     message: "Smaller amount expected.",

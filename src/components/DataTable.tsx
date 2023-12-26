@@ -21,7 +21,7 @@ import {
 import { TransactionForm } from "./TransactionForm";
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { TableInterface } from "../pages/interfaces";
+import { TableInterface } from "../interfaces";
 import { tableState } from "../store/atoms/tableState";
 import { toast } from "react-toastify";
 import axios from "axios";

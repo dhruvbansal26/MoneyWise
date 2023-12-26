@@ -1,5 +1,5 @@
 import { atomFamily } from "recoil";
-import { TableInterface } from "@/pages/interfaces";
+import { TableInterface } from "@/interfaces";
 interface TablesState {
   tables: TableInterface[];
   length: number;
