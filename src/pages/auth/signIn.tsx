@@ -24,9 +24,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-export default function SignIn({
+const Signin = ({
   providers,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <div className="flex flex-col justify-between items-center mt-20 p-28">
       {Object.values(providers).map((provider) => (
@@ -130,4 +130,5 @@ export default function SignIn({
       ))}
     </div>
   );
-}
+};
+export default Signin;
