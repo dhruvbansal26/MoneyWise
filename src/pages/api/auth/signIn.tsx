@@ -4,8 +4,8 @@ import type {
 } from "next";
 import { getProviders, signIn } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { Button } from "../../components/ui/button";
+import { authOptions } from "./[...nextauth]";
+import { Button } from "../../../components/ui/button";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
