@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/toggle-mode";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { signIn, useSession, signOut, getProviders } from "next-auth/react";
+import { signIn, useSession, signOut } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,29 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
-import Signin from "@/pages/auth/signin";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  // If the user is already logged in, redirect.
-  // Note: Make sure not to redirect to the same page
-  // To avoid an infinite loop!
-  if (session) {
-    return { redirect: { destination: "/" } };
-  }
-
-  const providers = await getProviders();
-
-  return {
-    props: { providers: providers ?? [] },
-  };
-}
-
-const Navbar = ({ providers }) => {
+const Navbar = () => {
   const { data: session, status } = useSession();
 
   if (!session) {
@@ -54,7 +33,7 @@ const Navbar = ({ providers }) => {
               <li>
                 <Button
                   onClick={() => {
-                    Signin(providers);
+                    signIn();
                   }}
                 >
                   Login
