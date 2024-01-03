@@ -47,10 +47,6 @@ To run the development server locally, follow these steps:
 
 The application has been successfully deployed on [Vercel](https://vercel.com/). Any updates pushed to the main branch will automatically trigger deployment.
 
-## Contribution
-
-Contributions are welcome! If you'd like to contribute to MoneyWise, please fork the repository and create a pull request with your proposed changes. Be sure to follow the project's guidelines and coding conventions.
-
 ### Development Guidelines
 
 - Please ensure your code adheres to the established style and linting rules.
