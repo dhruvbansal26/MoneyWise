@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MoneyWise
+
+MoneyWise is a full-stack application designed to simplify expense tracking and visualization. It's a work in progress with ongoing enhancements and features planned for future updates.
+
+Access the live application: [MoneyWise App](https://www.moneywiseapp.online/)
 
 ## Getting Started
 
-First, run the development server:
+To run the development server locally, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone the repository:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone <repository_url>
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. Navigate to the project directory:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   cd moneywise-app
+   ```
 
-## Learn More
+3. Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   yarn install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Start the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   yarn dev
+   ```
 
-## Deploy on Vercel
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technology Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Frameworks and Libraries
+
+- [shadcn/ui](https://ui.shadcn.com/): Utilized for themes and components.
+- [Recoil](https://recoiljs.org/): Chosen as the state management library for efficient state handling.
+- [NextAuth.js](https://next-auth.js.org/): Integrated for user authentication functionalities.
+- [Prisma](https://www.prisma.io/): Used as the ORM (Object-Relational Mapping) for database operations.
+
+## Deployment
+
+The application has been successfully deployed on [Vercel](https://vercel.com/). Any updates pushed to the main branch will automatically trigger deployment.
+
+## Contribution
+
+Contributions are welcome! If you'd like to contribute to MoneyWise, please fork the repository and create a pull request with your proposed changes. Be sure to follow the project's guidelines and coding conventions.
+
+### Development Guidelines
+
+- Please ensure your code adheres to the established style and linting rules.
+- Create descriptive commit messages and pull request titles to ease the review process.
+
+## Future Enhancements
+
+The MoneyWise team is actively working on several enhancements and features, including:
+
+- Enhanced visualization tools for expense analysis.
+- Improved user interface and experience.
+
+Feel free to explore the project and its codebase to learn more!
