@@ -11,7 +11,7 @@ To run the development server locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/dhruvbansal26/moneywise.git
    ```
 
 2. Navigate to the project directory:
