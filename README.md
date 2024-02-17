@@ -49,8 +49,6 @@ The application has been successfully deployed on [Vercel](https://vercel.com/).
 
 ## Future Enhancements
 
-The MoneyWise team is actively working on several enhancements and features, including:
-
 - Enhanced visualization tools for expense analysis.
 - Improved user interface and experience.
 
